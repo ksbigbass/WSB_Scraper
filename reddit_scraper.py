@@ -4,7 +4,7 @@ Created on Mon May 10 10:54:05 2021
 
 @author: ksbig
 """
-import counters
+import countersA
 import praw
 import numpy as np
 from tkinter import * 
@@ -40,11 +40,11 @@ def getData(int):
            for submission in top_subreddit:
                         title= submission.title
                         title_words = title.split()
-                        counters.words_collection.append(title_words)
+                        countersA.words_collection.append(title_words)
         
-           counters.cleanTitle(counters.words_collection)
+           countersA.cleanTitle(countersA.words_collection)
                 
-           count = (counters.CountFrequency(counters.potential_stock_symbols))
+           count = (countersA.CountFrequency(countersA.potential_stock_symbols))
            countLabel= Label(root, text=count)
            countLabel.pack()
            plot(count)
@@ -55,11 +55,11 @@ def getData(int):
            for submission in top_subreddit:
                         title= submission.title
                         title_words = title.split()
-                        counters.words_collection.append(title_words)
+                        countersA.words_collection.append(title_words)
         
-           counters.cleanTitle(counters.words_collection)
+           countersA.cleanTitle(countersA.words_collection)
                 
-           count = (counters.CountFrequency(counters.potential_stock_symbols))
+           count = (countersA.CountFrequency(countersA.potential_stock_symbols))
            countLabel= Label(root, text=count)
            countLabel.pack()
            plot(count)           
@@ -70,11 +70,11 @@ def getData(int):
            for submission in top_subreddit:
                         title= submission.title
                         title_words = title.split()
-                        counters.words_collection.append(title_words)
+                        countersA.words_collection.append(title_words)
         
-           counters.cleanTitle(counters.words_collection)
+           countersA.cleanTitle(countersA.words_collection)
                 
-           count = (counters.CountFrequency(counters.potential_stock_symbols))
+           count = (countersA.CountFrequency(countersA.potential_stock_symbols))
            countLabel= Label(root, text=count)
            countLabel.pack()
      
