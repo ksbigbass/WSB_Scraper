@@ -1,0 +1,190 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="card mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h2>Analysis Results for r/{{ subreddit }}</h2>
+                <div>
+                    <button class="btn btn-outline-secondary" onclick="exportToCsv()">
+                        <i class="fas fa-download"></i> Export CSV
+                    </button>
+                    <a href="/" class="btn btn-primary">New Analysis</a>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row mb-4">
+                    <div class="col-md-4">
+                        <div class="card bg-light">
+                            <div class="card-body text-center">
+                                <h5>Total Posts Analyzed</h5>
+                                <h2 class="mb-0">{{ total_posts }}</h2>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card bg-light">
+                            <div class="card-body text-center">
+                                <h5>Unique Symbols</h5>
+                                <h2 class="mb-0">{{ symbols|length }}</h2>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card bg-light">
+                            <div class="card-body text-center">
+                                <h5>Average Sentiment</h5>
+                                <h2 class="mb-0">{{ avg_sentiment|round(2) }}</h2>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-body">
+                                <canvas id="mentionsChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-body">
+                                <canvas id="sentimentChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table table-hover" id="resultsTable">
+                        <thead>
+                            <tr>
+                                <th>Symbol</th>
+                                <th>Mentions</th>
+                                <th>Sentiment</th>
+                                <th>Posts</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for symbol, data in results.items() %}
+                            <tr>
+                                <td>{{ symbol }}</td>
+                                <td>{{ data.mentions }}</td>
+                                <td>
+                                    <span class="badge {% if data.sentiment > 0 %}bg-success{% elif data.sentiment < 0 %}bg-danger{% else %}bg-secondary{% endif %}">
+                                        {{ data.sentiment|round(2) }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <button class="btn btn-sm btn-outline-primary" 
+                                            onclick="showPosts('{{ symbol }}')">
+                                        View Posts
+                                    </button>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="postsModal" tabindex="-1" aria-labelledby="postsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="postsModalLabel">Posts Mentioning <span id="modalSymbol"></span></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="modalContent">
+                </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</script>
+{% endblock %}
+        // Mentions Chart
+        const mentionsCtx = document.getElementById('mentionsChart').getContext('2d');
+        new Chart(mentionsCtx, {
+            type: 'bar',
+            data: {
+                labels: {{ symbols|tojson|safe }},
+                // FIXED: Added |safe filter
+                datasets: [{
+                    label: 'Mentions',
+                    data: {{ mentions|tojson|safe }},
+                    backgroundColor: 'rgba(54, 162, 235, 0.5)'
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Symbol Mentions'
+                    }
+                }
+            }
+        });
+
+        // Sentiment Chart
+        const sentimentCtx = document.getElementById('sentimentChart').getContext('2d');
+        new Chart(sentimentCtx, {
+            type: 'bar',
+            data: {
+                labels: {{ symbols|tojson|safe }},
+                // FIXED: Added |safe filter
+                datasets: [{
+                    label: 'Sentiment',
+                    data: {{ sentiments|tojson|safe }},
+                    backgroundColor: 'rgba(75, 192, 192, 0.5)'
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Symbol Sentiment'
+                    }
+                }
+            }
+        });
+    });
+
+    // Export function (No changes needed)
+    function exportToCsv() {
+        const rows = [['Symbol', 'Mentions', 'Sentiment']];
+        {% for symbol, data in results.items() %}
+        rows.push(['{{ symbol }}', '{{ data.mentions }}', '{{ data.sentiment }}']);
+        {% endfor %}
+        
+        const csvContent = rows.map(row => row.join(',')).join('\n');
+        const blob = new Blob([csvContent], { type: 'text/csv' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'reddit_analysis_{{ subreddit }}.csv';
+        a.click();
+        window.URL.revokeObjectURL(url);
+    }
+
+    // Show posts modal
+    function showPosts(symbol) {
+        document.getElementById('modalSymbol').textContent = symbol;
+        // Add AJAX call here to fetch posts for the symbol (placeholder)
+        
+        // FIXED: Correct Bootstrap 5 modal initialization
+        const modal = new bootstrap.Modal(document.getElementById('postsModal'));
+        modal.show();
+    }
+</script>
+{% endblock %}

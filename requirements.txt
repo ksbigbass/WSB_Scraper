@@ -1,0 +1,4 @@
+numpy==1.26.4  # For numerical operations (as np)
+praw==7.8.1    # For Reddit API access
+pillow==11.1.0 # For PIL image handling
+matplotlib==3.9.2  # For plotting with Tkinter backend

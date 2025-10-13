@@ -1,0 +1,15 @@
+body {
+    background-color: #f8f9fa;
+}
+
+.card {
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.navbar {
+    margin-bottom: 2rem;
+}
+
+#results {
+    transition: all 0.3s ease;
+}
