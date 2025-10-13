@@ -4,7 +4,7 @@ Created on Mon May 10 10:54:05 2021
 
 @author: ksbig
 """
-import countersA
+import counters
 import praw
 import numpy as np
 from tkinter import * 
@@ -40,11 +40,11 @@ def getData(int):
            for submission in top_subreddit:
                         title= submission.title
                         title_words = title.split()
-                        countersA.words_collection.append(title_words)
+                        counters.words_collection.append(title_words)
         
-           countersA.cleanTitle(countersA.words_collection)
+           counters.cleanTitle(counters.words_collection)
                 
-           count = (countersA.CountFrequency(countersA.potential_stock_symbols))
+           count = (counters.CountFrequency(counters.potential_stock_symbols))
            countLabel= Label(root, text=count)
            countLabel.pack()
            plot(count)
@@ -55,11 +55,11 @@ def getData(int):
            for submission in top_subreddit:
                         title= submission.title
                         title_words = title.split()
-                        countersA.words_collection.append(title_words)
+                        counters.words_collection.append(title_words)
         
-           countersA.cleanTitle(countersA.words_collection)
+           counters.cleanTitle(counters.words_collection)
                 
-           count = (countersA.CountFrequency(countersA.potential_stock_symbols))
+           count = (counters.CountFrequency(counters.potential_stock_symbols))
            countLabel= Label(root, text=count)
            countLabel.pack()
            plot(count)           
@@ -70,11 +70,11 @@ def getData(int):
            for submission in top_subreddit:
                         title= submission.title
                         title_words = title.split()
-                        countersA.words_collection.append(title_words)
+                        counters.words_collection.append(title_words)
         
-           countersA.cleanTitle(countersA.words_collection)
+           counters.cleanTitle(counters.words_collection)
                 
-           count = (countersA.CountFrequency(countersA.potential_stock_symbols))
+           count = (counters.CountFrequency(counters.potential_stock_symbols))
            countLabel= Label(root, text=count)
            countLabel.pack()
      
@@ -131,7 +131,7 @@ if __name__ == "__main__":
                      client_secret ='kOGPQcJYvl5Ncu5VPZ7T2yOnbezOFw',  
                      user_agent ='WSB',  
                      username ='',  
-                     password ='')  
+                     password ='!')  
 
 root = Tk()
 root.title("Reddit Stock Symbol Scraper")
