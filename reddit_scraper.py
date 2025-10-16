@@ -24,53 +24,24 @@ except Exception:
 SYMBOL_RE = re.compile(r"\$?[A-Z]{1,4}\b")
 
 
-def _get_reddit_client():
-       """Create and return a PRAW Reddit instance using env vars (or fallback)."""
+def _get_reddit_client() -> praw.Reddit:
        client_id = os.getenv('REDDIT_CLIENT_ID')
        client_secret = os.getenv('REDDIT_CLIENT_SECRET')
        user_agent = os.getenv('REDDIT_USER_AGENT', 'WSB_Scraper (by /u/yourusername)')
 
-       # Fallback to hardcoded values if present in legacy script (not recommended)
        if not client_id or not client_secret:
-              # Try to honor any hardcoded credentials in the original file (if left)
-              client_id = os.getenv('REDDIT_CLIENT_ID', os.getenv('REDDIT_CLIENTID'))
-              client_secret = os.getenv('REDDIT_CLIENT_SECRET', os.getenv('REDDIT_CLIENTSECRET'))
+              raise EnvironmentError("Missing REDDIT_CLIENT_ID or REDDIT_CLIENT_SECRET environment variable.")
 
-       # If still missing, try to load from a .env file (if python-dotenv is installed)
-       if not client_id or not client_secret:
-              try:
-                     from dotenv import load_dotenv
-                     # Load .env from project root
-                     load_dotenv()
-                     client_id = os.getenv('REDDIT_CLIENT_ID')
-                     client_secret = os.getenv('REDDIT_CLIENT_SECRET')
-              except Exception:
-                     # python-dotenv not available or load failed; will raise below if still missing
-                     pass
+       reddit = praw.Reddit(
+              client_id=client_id,
+              client_secret=client_secret,
+              user_agent=user_agent,
+       )
+       return reddit
 
-       if not client_id or not client_secret:
-              raise EnvironmentError(
-                     'Missing REDDIT_CLIENT_ID or REDDIT_CLIENT_SECRET environment variables.\n'
-                     'Set them in your shell (export REDDIT_CLIENT_ID=... REDDIT_CLIENT_SECRET=...) or create a .env file with:\n'
-                     'REDDIT_CLIENT_ID=your_id\nREDDIT_CLIENT_SECRET=your_secret\nREDDIT_USER_AGENT=your_agent'
-              )
-
-       return praw.Reddit(client_id=client_id, client_secret=client_secret, user_agent=user_agent)
 
 
 def analyze_subreddit(subreddit: str, limit: int = 100) -> Dict[str, Any]:
-       """Fetch recent posts from `subreddit`, extract ticker-like symbols, and return summary data.
-
-       Returned structure::
-         {
-              'subreddit': subreddit,
-              'total_posts': int,
-              'symbols': [str,...],
-              'mentions': [int,...],
-              'sentiments': [float,...],
-              'results': { symbol: { 'mentions': int, 'sentiment': float, 'posts': [post_dict,...] }, ... }
-         }
-       """
        reddit = _get_reddit_client()
        posts = []
        symbols_found = []

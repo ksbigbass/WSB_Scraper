@@ -1,10 +1,29 @@
 from flask import Flask, render_template, request, jsonify
+from dotenv import load_dotenv
 import os
+import praw
+import re
+import collections
 from datetime import datetime
 
 from reddit_scraper import analyze_subreddit
 
+load_dotenv()  # Load environment variables from .env file if present
+
+required_env_vars = ['REDDIT_CLIENT_ID', 'REDDIT_CLIENT_SECRET', 'REDDIT_USER_AGENT']
+missing_vars = [var for var in required_env_vars if not os.getenv(var)]
+if missing_vars:
+    print(f"Warning: Missing environment variables: {', '.join(missing_vars)}")
+    print("Please create a .env file or export the required variables before running the app.")
+
+
 app = Flask(__name__)
+
+reddit= praw.Reddit(
+    client_id=os.getenv('REDDIT_CLIENT_ID'),
+    client_secret=os.getenv('REDDIT_CLIENT_SECRET'),
+    user_agent=os.getenv('REDDIT_USER_AGENT')
+)
 
 
 @app.route('/')
@@ -41,7 +60,7 @@ def analyze():
 
 
 if __name__ == '__main__':
-    # Allow overriding port via FLASK_RUN_PORT environment variable for testing
-    import os
-    port = int(os.getenv('FLASK_RUN_PORT', os.getenv('PORT', '5000')))
-    app.run(debug=True, port=port)
+        app.run(host='0.0.0.0', port=5000)
+        
+            # Allow overriding port via FLASK_RUN_PORT environment variable for testing
+  

@@ -14,3 +14,9 @@ __pycache__/
 
 # Logs
 *.log
+
+.env
+__pycache__/
+*.pyc
+.DS_Store
+creds.py
