@@ -1,16 +1,11 @@
 # -*- coding: utf-8 -*-
-"""
-Lightweight scraper utilities adapted from the original GUI script.
-
-Provides analyze_subreddit(subreddit, limit) which returns a JSON-serializable
-structure summarizing symbol mentions and posts. GUI/Tk code is preserved but
-only runs when executed as a script (not when imported).
-"""
 import os
 import re
 import collections
 import praw
 from typing import Dict, Any, List
+import prawcore
+import flask
 
 # Reuse known exclusions from counters if available
 try:
@@ -91,33 +86,4 @@ def analyze_subreddit(subreddit: str, limit: int = 100) -> Dict[str, Any]:
 
 if __name__ == '__main__':
        # Preserve original GUI behavior when run as a script (legacy code)
-       try:
-              from tkinter import *
-              import tkinter as tk
-              from PIL import Image, ImageTk
-              from matplotlib.figure import Figure
-              from matplotlib.backends.backend_tkagg import (FigureCanvasTkAgg, NavigationToolbar2Tk)
-
-              # Old GUI initialization preserved here (simplified)
-              reddit = None
-              try:
-                     reddit = _get_reddit_client()
-              except EnvironmentError as ee:
-                     print('Environment credentials missing:', ee)
-                     print('Please create a .env file or export REDDIT_CLIENT_ID and REDDIT_CLIENT_SECRET before running the GUI.')
-                     raise
-
-              root = Tk()
-              root.title("Reddit Stock Symbol Scraper")
-              root.geometry("900x900")
-
-              # ...existing GUI wiring would go here if you want to keep it
-              # For brevity we won't recreate the full GUI in this refactor.
-              print('Run analyze_subreddit(subreddit, limit) from code or use the Flask app.')
-
-       except Exception as e:
-              print('GUI could not be started:', e)
-
-
-
-
+       pass
