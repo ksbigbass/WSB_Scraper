@@ -8,6 +8,6 @@ spec:
     app: scraper
   ports:
   - port: 80
-    targetPort: 9000
+    targetPort: 5000
   type: LoadBalancer
 

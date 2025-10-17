@@ -13,9 +13,11 @@ spec:
       labels:
         app: scraper
     spec:
+      restartPolicy: Always
       containers:
-      - name: scraper
-        image: your-scraper-image:latest
+      - name: scraper-app
+        image: scraper-app:latest
+        imagePullPolicy: Never
         resources:
           limits:
             memory: "256Mi"
@@ -24,5 +26,4 @@ spec:
             memory: "128Mi"
             cpu: "250m"
         ports:
-        - containerPort: 9000
-      restartPolicy: Always 
+        - containerPort: 5000
