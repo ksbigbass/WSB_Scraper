@@ -1,13 +1,25 @@
-## Reddit Scraper
+## Reddit Data Scraper
 
-Because sometimes you need more than just doom-scrolling - you need *organized* doom-scrolling data.
+Python application for automated Reddit data collection via the official Reddit API (PRAW). Designed for researchers, data analysts, and developers needing structured access to Reddit content.
 
-A Python tool for extracting Reddit posts and comments from subreddits. Great for sentiment analysis, trend tracking, or just hoarding internet data like a digital packrat.
+### Capabilities
+- Multi-subreddit data extraction
+- Configurable post filtering (score threshold, time range, flair)
+- Comment thread traversal
+- Structured data export (CSV, JSON, DataFrame)
+- Automatic rate limiting and error handling
+- Authentication via OAuth2
 
-**What it does:**
-- Pulls posts from any subreddit you point it at
-- Saves titles, scores, comments, timestamps
-- Exports to CSV for your spreadsheet obsession
-- Respects API limits (we're not animals)
+### Use Cases
+- Social media sentiment analysis
+- Trend identification and monitoring
+- Content aggregation
+- Market research
+- NLP training data collection
 
-**Tech:** Python, PRAW, Pandas
+**Stack**: Python 3.x, PRAW, Pandas, Requests
+```
+
+## Short & Punchy
+```
+Extract Reddit posts and comments at scale. Python scraper using PRAW for data collection, analysis, and export. Your gateway to organized chaos.
